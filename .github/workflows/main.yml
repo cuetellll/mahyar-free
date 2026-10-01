@@ -23,33 +23,65 @@ jobs:
       run: |
         $url = "https://github.com/SagerNet/sing-box/releases/download/v1.14.0/sing-box-1.14.0-windows-amd64.zip"
         $output = "sing-box.zip"
+        Write-Host "Downloading sing-box..."
         Invoke-WebRequest -Uri $url -OutFile $output
-        Expand-Archive -Path $output -DestinationPath "sing-box-temp"
-        $sourceExe = Get-ChildItem -Path "sing-box-temp" -Recurse -Filter "sing-box.exe" | Select-Object -First 1
-        Copy-Item $sourceExe.FullName -Destination "src\MahyarFree\bin\sing-box.exe" -Force
-        Write-Host "sing-box.exe copied to src\MahyarFree\bin\sing-box.exe"
+        Expand-Archive -Path $output -DestinationPath "sing-box-temp" -Force
+        Write-Host "Extracted files:"
+        Get-ChildItem -Path "sing-box-temp" -Recurse | Select-Object FullName
+
+    - name: Find and copy sing-box.exe
+      shell: pwsh
+      run: |
+        $sourceExe = Get-ChildItem -Path . -Recurse -Filter "sing-box.exe" -ErrorAction SilentlyContinue | Select-Object -First 1
+        if ($sourceExe) {
+          Write-Host "Found sing-box.exe at: $($sourceExe.FullName)"
+          $projDir = Get-ChildItem -Path . -Recurse -Filter "MahyarFree.csproj" -ErrorAction SilentlyContinue | Select-Object -First 1
+          if ($projDir) {
+            $binDir = Join-Path $projDir.DirectoryName "bin"
+            New-Item -ItemType Directory -Path $binDir -Force | Out-Null
+            Copy-Item $sourceExe.FullName -Destination $binDir -Force
+            Write-Host "Copied to: $binDir"
+          } else {
+            Write-Host "ERROR: MahyarFree.csproj not found"
+            exit 1
+          }
+        } else {
+          Write-Host "ERROR: sing-box.exe not found"
+          exit 1
+        }
 
     - name: Restore dependencies
-      run: dotnet restore src/MahyarFree.sln
+      shell: pwsh
+      run: |
+        $sln = Get-ChildItem -Path . -Recurse -Filter "*.sln" | Select-Object -First 1
+        dotnet restore $sln.FullName
 
     - name: Build
-      run: dotnet build src/MahyarFree.sln -c Release --no-restore
-
-    - name: Publish single-file
+      shell: pwsh
       run: |
-        dotnet publish src/MahyarFree/MahyarFree.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o publish
+        $sln = Get-ChildItem -Path . -Recurse -Filter "*.sln" | Select-Object -First 1
+        dotnet build $sln.FullName -c Release --no-restore
+
+    - name: Publish
+      shell: pwsh
+      run: |
+        $csproj = Get-ChildItem -Path . -Recurse -Filter "MahyarFree.csproj" | Select-Object -First 1
+        dotnet publish $csproj.FullName -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o publish
 
     - name: Copy sing-box to output
       shell: pwsh
       run: |
-        Copy-Item "src\MahyarFree\bin\sing-box.exe" -Destination "publish\sing-box.exe" -Force
+        $sourceExe = Get-ChildItem -Path . -Recurse -Filter "sing-box.exe" -ErrorAction SilentlyContinue | Select-Object -First 1
+        if ($sourceExe) {
+          Copy-Item $sourceExe.FullName -Destination "publish\sing-box.exe" -Force
+        }
         Get-ChildItem publish
 
-    - name: Create ZIP package
+    - name: Create ZIP
       shell: pwsh
       run: |
         Compress-Archive -Path "publish\*" -DestinationPath "MahyarFree.zip" -Force
-        Write-Host "Created: MahyarFree.zip"
+        Write-Host "ZIP created"
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
