@@ -1,0 +1,13 @@
+# Mahyar Free VPN - Server Configs
+# فرمت: یک کانفیگ در هر خط
+# پروتکل‌های پشتیبانی شده: vmess:// | vless:// | trojan:// | ss:// | hysteria:// | hy2://
+# برای اضافه کردن کانفیگ جدید، کافیست یک خط جدید با لینک کامل اضافه کنید و commit کنید.
+# کاربران با زدن دکمه "Fetch New" در برنامه، این لیست را به‌روزرسانی می‌کنند.
+#
+# نمونه کانفیگ‌ها (اینها را با کانفیگ‌های واقعی خودتان جایگزین کنید):
+# vless://a3524d93-994e-450b-8512-f8eabf1fb127@66.33.22.237:16523?encryption=none&security=reality&sni=dog.ai&fp=chrome&pbk=fP2Z44XRYFCfmKnYTbJZWQEtMxQacWc21Ocl3qr9kXs&sid=70c0&spx=%2Fadb4c2845bd0819&type=xhttp&path=%2F&mode=auto&extra=%7B%22mode%22%3A%22auto%22%2C%22xPaddingBytes%22%3A%22100-1000%22%7D#3xui-%F0%9F%87%B8%F0%9F%87%B1Arvin%F0%9F%87%B8%F0%9F%87%B1
+# vless://dab7de5d-93d0-f4f9-9505-7aebb61e127f@ahbpanel-production-bef0.up.railway.app:443?encryption=none&security=tls&sni=ahbpanel-production-bef0.up.railway.app&fp=chrome&alpn=http%2F1.1&insecure=0&allowInsecure=0&type=ws&host=ahbpanel-production-bef0.up.railway.app&path=%2Fws%2Fdab7de5d-93d0-f4f9-9505-7aebb61e127f#bjr1xxiw28lr
+# hysteria2://8beb70d3-516e-6442-e3eb-5fb67346a782@ahbpanel-production-bef0.up.railway.app:443?sni=ahbpanel-production-bef0.up.railway.app&insecure=0&allowInsecure=0#okdor1thbz
+# vless://7c911a32-d681-a11b-7685-6be3703cd2c6@ahbpanel-production-bef0.up.railway.app:443?encryption=none&security=tls&sni=ahbpanel-production-bef0.up.railway.app&fp=chrome&alpn=http%2F1.1&insecure=0&allowInsecure=0&type=ws&host=ahbpanel-production-bef0.up.railway.app&path=%2Fws%2F7c911a32-d681-a11b-7685-6be3703cd2c6#%D9%84%DB%8C%D9%86%DA%A9%20%D9%BE%DB%8C%D8%B4%E2%80%8C%D9%81%D8%B1%D8%B6
+
+
